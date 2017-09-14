@@ -1,0 +1,226 @@
+---
+title: 'Lab 1'
+author: 'Angelo Dagonel'
+date: '8/31/2017'
+output: github_document
+---
+
+```{r include=FALSE}
+
+### Loading necessary packages
+
+library(dplyr)
+library(printr)
+library(tidyr)
+library(knitr)
+library(scales)
+library(ggplot2)
+
+# Get rid of warning messages
+options(warn=-1)
+```
+
+---
+
+#R as a calculator
+
+**Calculate Leia's total expenses**
+
+cell phone        $80 
+transportation    $20
+groceries         $527
+gym               $10
+rent              $1500
+other             $83
+
+*Insert chunk:*       `Ctrl+Alt+I / Cmd+Option+I`
+
+*Run current chunk:*  `Ctrl+Shift+Enter / Cmd+Shift+Enter?`
+
+
+Basic addition
+```{r}
+#Total expenses
+80 + 20 + 527 + 10 + 1500 + 83
+```
+
+Creating objects and adding with operators `<-`
+```{r}
+#Creating objects with values using <-
+phone <- 80
+transportation <- 20
+groceries <- 527
+gym <- 10
+rent <- 1500
+other <- 83
+
+#Example: Inspect value of cell phone expenses
+phone
+
+#Total expenses via Sum of objects
+total <- phone + transportation + groceries + gym + rent + other
+total
+
+#Total semester expenses (5 months)
+semtot <- total*3
+semtot
+
+#Total school year (10 months, or 2 semesters)
+yeartot <- semtot*2
+yeartot
+```
+
+#Functions
+
+Absolute values
+```{r}
+abs(10)
+abs(-4)
+```
+
+Square roots
+```{r}
+sqrt(9)
+sqrt(16)
+```
+
+Natural logarithms
+```{r}
+log(2)
+```
+
+#Vectors
+
+Create vector of Leia's expenses using combine function `c()`
+
+```{r}
+#Vector expenses
+expenses <- c(phone, transportation, groceries, gym, rent, other)
+names(expenses) <- c('Cell phone', 'Transportation', 'Groceries', 'Gym', 'Rent', 'Other')
+expenses
+
+#Barplot of expenses
+barplot(expenses)
+
+#Add names to values to make data frame
+expenses_names <- c('Cell phone', 'Transportation', 'Groceries', 'Gym', 'Rent', 'Other')
+expenses_table <- data.frame(expenses)
+expenses_table
+```
+
+Sort vector in decreasing order, and add values to top of bar graph
+
+```{r}
+expenses_sort <- sort(expenses, decreasing=TRUE)
+
+expenseplot <- barplot(sort(expenses, decreasing=TRUE))
+expenseplot
+
+text(x=expenseplot,
+     y=expenses_sort,
+     label=expenses_sort,
+     pos=3,
+     cex=0.8)
+```
+
+
+#Pythagoras formula
+
+```{r}
+#Create 'a' and 'b' for Pythagoras
+a = 3
+b = 4
+
+c = sqrt(a^2 + b^2)
+c
+```
+
+#Binomial formula
+
+```{r}
+#Compute number of combinations
+choose(n=5, k=2)
+
+#Factorial
+factorial(4)
+```
+
+**Fair coin toss**
+
+Fair coin is tossed *n=5 times*--What's the *probability* of getting  *exactly 2 heads*?
+
+```{r}
+#Assign objects for use in calculation
+n = 5
+p = 0.5
+k = 2
+
+#Combination calculation with `factorial`
+comb_factorial = factorial(n)/(factorial(k)*factorial(n-k))
+comb_factorial
+
+#Combination calculation with Choose
+comb_choose = choose(n, k)
+comb_choose
+
+#Calculate probability including Factorial
+(factorial(n)/(factorial(k)*factorial(n-k)))*(p^k)*((1-p)^(n-k))
+#or
+prob1 = comb_factorial*(p^k)*((1-p)^(n-k))
+prob1
+
+#Calculate probability including Choose
+choose(n, k)*(p^k)*((1-p)^(n-k))
+#or
+prob2 = comb_factorial*(p^k)*((1-p)^(n-k))
+prob2
+```
+
+**Fair die roll**
+
+Fair die is rolled *n=10 times*--What's the probability of rolling *exactly k=3 6s*?
+
+```{r}
+#Assignment of objects
+n = 10
+p = 1/6
+k = 3
+
+#Combination via `choose`
+comb_die1 = choose(n,k)
+comb_die1
+
+#Probability including Choose
+prob_die1 = comb_die1*(p^k)*((1-p)^(n-k))
+prob_die1
+```
+
+**`dbinom()` function**
+
+`dbinom(x, size, prob, log = FALSE)`
+or
+`dbinom(k, n, prob)`
+
+```
+x, q    vector of quantiles.
+p	      vector of probabilities.
+n	      number of observations (If length(n)>1, length = # required)
+size    number of trials (zero or more).
+prob	  probability of success on each trial.
+log/.p  logical; if TRUE, probabilities p are given as log(p).
+```
+
+2 heads in 5 coin tosses
+```{r}
+dbinom(2, 5, 0.5)
+```
+
+3 sixes in 3 rolls of a die
+```{r}
+dbinom(3, 3, 1/6)
+```
+
+2 heads in 5 coin tosses, biased coin (35%)
+```{r}
+dbinom(2, 5, .35)
+```
